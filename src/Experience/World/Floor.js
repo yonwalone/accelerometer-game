@@ -15,7 +15,7 @@ export default class Floor
     }
 
     setGeometry() {
-        this.geometry = new THREE.CircleGeometry(10, 64)
+        this.geometry = new THREE.PlaneGeometry(20, 20)
     }
 
     setTextures() {
@@ -23,12 +23,12 @@ export default class Floor
 
         this.textures.color = this.resources.items.floorColorTexture
         this.textures.color.encoding = THREE.sRGBEncoding
-        this.textures.color.repeat.set(5, 5)
+        this.textures.color.repeat.set(3, 3)
         this.textures.color.wrapS = THREE.RepeatWrapping
         this.textures.color.wrapT = THREE.RepeatWrapping
 
         this.textures.normal = this.resources.items.floorNormalTexture
-        this.textures.normal.repeat.set(5, 5)
+        this.textures.normal.repeat.set(3, 3)
         this.textures.normal.wrapS = THREE.RepeatWrapping
         this.textures.normal.wrapT = THREE.RepeatWrapping
     }
