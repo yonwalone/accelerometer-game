@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import Experience from '../Experience.js'
 import CANNON from 'cannon'
 
@@ -22,7 +21,10 @@ export default class Physics {
         this.time.on('tick', () =>
         {
             this.world.step(1/60, 1/60, 3)
+            // this.applyForces()
         })
+
+        console.log(window.DeviceOrientationEvent.arguments)
     }
 
     setWorld() {
@@ -60,12 +62,12 @@ export default class Physics {
 
     setBall() {
         this.ball = {}
-        this.ball.shape = new CANNON.Sphere(0.5)
+        this.ball.shape = new CANNON.Sphere(0.51)
         this.ball.body = new CANNON.Body({
             mass: 1,
             position: new CANNON.Vec3(0, 5, 0),
             shape: this.ball.shape,
-            material: this.defaultMaterial
+            material: this.defaultMaterial,
         })
         this.world.addBody(this.ball.body)
     }

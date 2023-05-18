@@ -6,6 +6,7 @@ import Renderer from './Renderer.js'
 import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 import Debug from './Utils/Debug.js'
+import Accelerometer from './Utils/Accelerometer.js'
 import sources from './sources.js'
 
 let instance = null
@@ -30,6 +31,7 @@ export default class Experience {
         this.camera = new Camera()
         this.renderer = new Renderer()
         this.world = new World()
+        this.accelerometer = new Accelerometer()
 
         // Resize event
         this.sizes.on('resize', () => {
