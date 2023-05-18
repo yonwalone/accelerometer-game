@@ -14,7 +14,7 @@ export default class Ball {
     }
 
     setGeometry() {
-        this.geometry = new THREE.SphereGeometry(1, 32, 16)
+        this.geometry = new THREE.SphereGeometry(0.5, 32, 16)
     }
 
     setTextures() {
@@ -43,7 +43,11 @@ export default class Ball {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.receiveShadow = true
         this.mesh.castShadow = true
-        this.mesh.position.set(0, 1, 0)
+        this.mesh.position.set(0, 5, 0)
         this.scene.add(this.mesh)
+    }
+
+    update(x, y , z) {
+        this.mesh.position.set(x, y, z)
     }
 }
