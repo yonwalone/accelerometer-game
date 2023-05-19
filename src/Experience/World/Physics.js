@@ -20,11 +20,8 @@ export default class Physics {
 
         this.time.on('tick', () =>
         {
-            this.world.step(1/60, 1/60, 3)
-            // this.applyForces()
+            this.world.step(1/60, this.time.delta, 3)
         })
-
-        console.log(window.DeviceOrientationEvent.arguments)
     }
 
     setWorld() {
