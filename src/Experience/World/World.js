@@ -20,11 +20,12 @@ export default class World {
     }    
 
     update() {
-        if (this.ball)
+        if (this.ball) {
             this.ball.update(
                 this.physics.ball.body.position.x,
                 this.physics.ball.body.position.y,
                 this.physics.ball.body.position.z
             )
+        }  
     }
 }

@@ -11,6 +11,7 @@
     "vite": "^4.0.4"
   },
   "dependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.0.1",
     "cannon": "^0.6.2",
     "lil-gui": "^0.17.0",
     "three": "^0.148.0"
