@@ -12,13 +12,16 @@ export default class Physics {
         // Set up
         if(this.debug.active) {
             this.physicsFolder = this.debug.ui.addFolder('physics')
-            this.sensorsFolder = this.debug.ui.addFolder('sensors')
         }
 
         this.setWorld()
         this.setMaterials()
         this.setFloor()
         this.setBall()
+        this.setWall1()
+        this.setWall2()
+        this.setWall3()
+        this.setWall4()
 
         this.time.on('tick', () => {
             this.moveBall(this.sensors.x, this.sensors.y)
@@ -90,34 +93,61 @@ export default class Physics {
         this.ball.shape = new CANNON.Sphere(0.51)
         this.ball.body = new CANNON.Body({
             mass: 1,
-            position: new CANNON.Vec3(0, 5, 0),
+            position: new CANNON.Vec3(0, 15, 0),
             shape: this.ball.shape,
             material: this.defaultMaterial,
         })
         this.world.addBody(this.ball.body)
     }
 
-    moveBall(x, y) {
-        const force = new CANNON.Vec3(-y, 0, -x)
-        this.ball.body.applyForce(force, this.ball.body.position)
+    setWall1() {
+        this.wall = {}
+        this.wall.body = new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
+            material: this.defaultMaterial,
+            position: new CANNON.Vec3(0, 0.5, 10)
+        })
+        this.world.addBody(this.wall.body)
     }
 
-    // setSensor() {
-    //     if (this.debug.active) {
-    //         this.sensorsFolder
-    //             .add(this.sensors, 'x')
-    //             .name('accelX')
-    //             .min(-0.5)
-    //             .max(0.5)
-    //             .step(0.001)
-    //     }
-    //     if (this.debug.active) {
-    //         this.sensorsFolder
-    //             .add(this.sensors, 'z')
-    //             .name('accelZ')
-    //             .min(-0.5)
-    //             .max(0.5)
-    //             .step(0.001)
-    //     }
-    // }
+    setWall2() {
+        this.wall = {}
+        this.wall.body = new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
+            material: this.defaultMaterial,
+            position: new CANNON.Vec3(0, 0.5, -10)
+        })
+        this.world.addBody(this.wall.body)
+    }
+
+    setWall3() {
+        this.wall = {}
+        this.wall.body = new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
+            material: this.defaultMaterial,
+            position: new CANNON.Vec3(-10, 0.5, 0),
+            quaternion: new CANNON.Quaternion().setFromEuler(0, Math.PI/2, 0)
+        })
+        this.world.addBody(this.wall.body)
+    }
+
+    setWall4() {
+        this.wall = {}
+        this.wall.body = new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
+            material: this.defaultMaterial,
+            position: new CANNON.Vec3(10, 0.5, 0),
+            quaternion: new CANNON.Quaternion().setFromEuler(0, Math.PI/2, 0)
+        })
+        this.world.addBody(this.wall.body)
+    }
+
+    moveBall(x, y) {
+        const force = new CANNON.Vec3(x, 0, -y)
+        this.ball.body.applyForce(force, this.ball.body.position)
+    }
 }
