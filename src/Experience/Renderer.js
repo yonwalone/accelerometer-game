@@ -9,10 +9,10 @@ export default class Renderer {
         this.scene = this.experience.scene
         this.camera = this.experience.camera
 
-        this.setInstacne()
+        this.setInstance()
     }
 
-    setInstacne() {
+    setInstance() {
         this.instance = new THREE.WebGLRenderer({
             canvas: this.canvas,
             antialias: true

@@ -1,8 +1,11 @@
 import * as THREE from 'three'
 import Experience from '../Experience.js'
 
-export default class Ball {
-    constructor() {
+export default class Wall {
+    constructor(dimensions, position, rotation) {
+        this.dimensions = dimensions
+        this.position = position
+        this.rotation = rotation
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -14,7 +17,11 @@ export default class Ball {
     }
 
     setGeometry() {
-        this.geometry = new THREE.SphereGeometry(0.5, 32, 16)
+        this.geometry = new THREE.BoxGeometry(
+            this.dimensions.x,
+            this.dimensions.y,
+            this.dimensions.z,
+        )
     }
 
     setTextures() {
@@ -43,11 +50,12 @@ export default class Ball {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.receiveShadow = true
         this.mesh.castShadow = true
-        this.mesh.position.set(0, 15, 0)
+        this.mesh.position.set(
+            this.position.x,
+            this.position.y,
+            this.position.z
+        )
+        this.mesh.rotateY(this.rotation)
         this.scene.add(this.mesh)
-    }
-
-    update(x, y , z) {
-        this.mesh.position.set(x, y, z)
     }
 }
