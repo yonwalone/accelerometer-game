@@ -1,6 +1,8 @@
 import Experience from '../Experience.js'
 import Sensors from '../Utils/Sensors.js'
 import CANNON from 'cannon'
+import objects from '../objects.js'
+import World from './World.js'
 
 export default class Physics {
     constructor() {
@@ -16,12 +18,27 @@ export default class Physics {
 
         this.setWorld()
         this.setMaterials()
-        this.setFloor()
+
         this.setBall()
-        this.setWall1()
-        this.setWall2()
-        this.setWall3()
-        this.setWall4()
+
+        // Playing field frame
+        this.setWall(objects.wallButtom)
+        this.setWall(objects.wallTop)
+        this.setWall(objects.wallLeft)
+        this.setWall(objects.wallRight)
+        this.setFinish(objects.levels[0].end)
+        this.setFloor()
+
+        // Level 1 Walls
+        const level1Walls = objects.levels[0].walls
+        for (const wall of level1Walls) {
+            this.setWall(wall)
+        }
+
+        const level1Holes = objects.levels[0].holes
+        for (const hole of level1Holes) {
+            this.setHole(hole)
+        }
 
         this.time.on('tick', () => {
             this.moveBall(this.sensors.x, this.sensors.y)
@@ -93,61 +110,134 @@ export default class Physics {
         this.ball.shape = new CANNON.Sphere(0.51)
         this.ball.body = new CANNON.Body({
             mass: 1,
-            position: new CANNON.Vec3(0, 15, 0),
+            position: new CANNON.Vec3(-8, 15, 8),
             shape: this.ball.shape,
             material: this.defaultMaterial,
         })
         this.world.addBody(this.ball.body)
     }
 
-    setWall1() {
+    setWall(object) {
         this.wall = {}
         this.wall.body = new CANNON.Body({
             mass: 0,
-            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
+            shape: new CANNON.Box(
+                new CANNON.Vec3(
+                    object.dimension.x / 2,
+                    object.dimension.y / 2,
+                    object.dimension.z / 2,
+                )),
             material: this.defaultMaterial,
-            position: new CANNON.Vec3(0, 0.5, 10)
+            position: new CANNON.Vec3(
+                object.position.x,
+                object.position.y,
+                object.position.z,
+            ),
+            quaternion: new CANNON.Quaternion().setFromEuler(
+                object.rotation.x, 
+                object.rotation.y,
+                object.rotation.z
+            )
         })
         this.world.addBody(this.wall.body)
     }
 
-    setWall2() {
-        this.wall = {}
-        this.wall.body = new CANNON.Body({
+    setHole(object) {
+        this.hole = {}
+        this.hole.shape = new CANNON.Sphere(0.51)
+        this.hole.body = new CANNON.Body({
             mass: 0,
-            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
-            material: this.defaultMaterial,
-            position: new CANNON.Vec3(0, 0.5, -10)
+            position: new CANNON.Vec3(
+                object.position.x,
+                object.position.y,
+                object.position.z,
+            ),
+            shape: this.hole.shape,
         })
-        this.world.addBody(this.wall.body)
+        this.world.addBody(this.hole.body)
+
+        // Add event listener for collision
+        this.hole.body.addEventListener('collide', (event) => {
+            setTimeout(() => {
+                const collidedBody = event.contact.bi.id === this.hole.body.id ? event.contact.bj : event.contact.bi;
+                if (collidedBody === this.ball.body) {
+                    // Ball has collided with the hole
+                    this.resetBall();
+                }
+            }, 0)
+        });
     }
 
-    setWall3() {
-        this.wall = {}
-        this.wall.body = new CANNON.Body({
+    setFinish(object) {
+        this.hole = {}
+        this.hole.shape = new CANNON.Sphere(0.51)
+        this.hole.body = new CANNON.Body({
             mass: 0,
-            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
-            material: this.defaultMaterial,
-            position: new CANNON.Vec3(-10, 0.5, 0),
-            quaternion: new CANNON.Quaternion().setFromEuler(0, Math.PI/2, 0)
+            position: new CANNON.Vec3(
+                object.position.x,
+                object.position.y,
+                object.position.z,
+            ),
+            shape: this.hole.shape,
         })
-        this.world.addBody(this.wall.body)
-    }
+        this.world.addBody(this.hole.body)
 
-    setWall4() {
-        this.wall = {}
-        this.wall.body = new CANNON.Body({
-            mass: 0,
-            shape: new CANNON.Box(new CANNON.Vec3(10, 0.5, 0.25)),
-            material: this.defaultMaterial,
-            position: new CANNON.Vec3(10, 0.5, 0),
-            quaternion: new CANNON.Quaternion().setFromEuler(0, Math.PI/2, 0)
-        })
-        this.world.addBody(this.wall.body)
+        // Add event listener for collision
+        this.hole.body.addEventListener('collide', (event) => {
+            setTimeout(() => {
+                const collidedBody = event.contact.bi.id === this.hole.body.id ? event.contact.bj : event.contact.bi;
+                if (collidedBody === this.ball.body) {
+                    // Ball has collided with the hole
+                    this.resetGame();
+                }
+            }, 0)
+        });
     }
 
     moveBall(x, y) {
-        const force = new CANNON.Vec3(x, 0, -y)
-        this.ball.body.applyForce(force, this.ball.body.position)
+        const force = new CANNON.Vec3(x, 0, -y);
+        this.ball.body.applyForce(force, this.ball.body.position);
+    }
+
+    resetBall() {
+        this.ball.body.position.set(-8, 0, 8)
+    }
+
+    resetGame() {
+        setTimeout(() => {
+            this.resetBall();
+        }, 0)
+        
+        // const bodies = this.world.bodies
+        
+        // for (const body of bodies) {
+        //     this.world.remove(body)
+        // }
+
+        this.setLevel2()
+    }
+
+    setLevel2() {
+        this.setBall()
+
+        // Playing field frame
+        this.setWall(objects.wallButtom)
+        this.setWall(objects.wallTop)
+        this.setWall(objects.wallLeft)
+        this.setWall(objects.wallRight)
+        this.setFloor()
+
+        // Level 1 Walls
+        const level1Walls = objects.levels[1].walls
+        for (const wall of level1Walls) {
+            this.setWall(wall)
+        }
+
+        const level1Holes = objects.levels[1].holes
+        for (const hole of level1Holes) {
+            this.setHole(hole)
+        }
+
+        this.level2 = new World(1)
     }
 }

@@ -43,7 +43,7 @@ export default class Ball {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.receiveShadow = true
         this.mesh.castShadow = true
-        this.mesh.position.set(0, 15, 0)
+        this.mesh.position.set(-8, 15, 8)
         this.scene.add(this.mesh)
     }
 
