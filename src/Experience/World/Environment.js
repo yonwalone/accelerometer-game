@@ -22,7 +22,7 @@ export default class Environment {
         this.sunLight.shadow.camera.far = 20
         this.sunLight.shadow.mapSize.set(1024, 1024)
         this.sunLight.shadow.normalBias = 0.05
-        this.sunLight.position.set(0, 10, 5)
+        this.sunLight.position.set(0, 5, 0)
 
         this.scene.add(this.sunLight)
 
