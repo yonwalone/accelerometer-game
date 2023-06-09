@@ -29,7 +29,7 @@ export default class Experience {
         this.resources = new Resources(sources)
         this.camera = new Camera()
         this.renderer = new Renderer()
-        this.world = new World()
+        this.world = new World(0)
 
         // Resize event
         this.sizes.on('resize', () => {

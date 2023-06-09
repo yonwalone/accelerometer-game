@@ -6,6 +6,19 @@ export default class Sensors {
     this.btn = document.getElementById("request")
     this.text = document.getElementById("text")
 
+    // Hide the button and text initially
+    this.btn.style.opacity = '0'
+    this.text.style.opacity = '0'
+
+    setTimeout(() => {
+      this.text.style.opacity = '1'
+    }, 500)
+
+    // Add a timeout to show the button and text after five seconds
+    setTimeout(() => {
+      this.btn.style.opacity = '1'
+    }, 3000)
+
     this.btn.addEventListener("click", this.permission.bind(this))
   }
 

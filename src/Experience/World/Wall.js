@@ -2,10 +2,10 @@ import * as THREE from 'three'
 import Experience from '../Experience.js'
 
 export default class Wall {
-    constructor(dimensions, position, rotation) {
-        this.dimensions = dimensions
-        this.position = position
-        this.rotation = rotation
+    constructor(object) {
+        this.dimension = object.dimension
+        this.position = object.position
+        this.rotation = object.rotation
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -18,9 +18,9 @@ export default class Wall {
 
     setGeometry() {
         this.geometry = new THREE.BoxGeometry(
-            this.dimensions.x,
-            this.dimensions.y,
-            this.dimensions.z,
+            this.dimension.x,
+            this.dimension.y,
+            this.dimension.z,
         )
     }
 
@@ -55,7 +55,11 @@ export default class Wall {
             this.position.y,
             this.position.z
         )
-        this.mesh.rotateY(this.rotation)
+        this.mesh.rotation.set(
+            this.rotation.x,
+            this.rotation.y,
+            this.rotation.z,
+        )
         this.scene.add(this.mesh)
     }
 }
